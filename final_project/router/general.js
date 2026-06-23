@@ -97,7 +97,7 @@ public_users.get('/promise/isbn/:isbn', function (req, res) {
         });
 });
 
-// Get book by ISBN using async/await with Axios (NEW)
+// Get book by ISBN using async/await with Axios
 public_users.get('/async/isbn/:isbn', async function (req, res) {
     const isbn = req.params.isbn;
     try {
@@ -128,7 +128,7 @@ public_users.get('/author/:author',function (req, res) {
     }
 });
 
-// Get book by author using Promise callbacks (NEW)
+// Get book by author using Promise callbacks
 public_users.get('/promise/author/:author', function (req, res) {
     const author = req.params.author;
 
@@ -158,7 +158,7 @@ public_users.get('/promise/author/:author', function (req, res) {
         });
 });
 
-// Get book by author using async/await with Axios (NEW)
+// Get book by author using async/await with Axios
 public_users.get('/async/author/:author', async function (req, res) {
     const author = req.params.author;
     try {
@@ -191,7 +191,7 @@ public_users.get('/title/:title',function (req, res) {
     }
 });
 
-// Get book by title using Promise callbacks (NEW)
+// Get book by title using Promise callbacks
 public_users.get('/promise/title/:title', function (req, res) {
     const title = req.params.title;
 
@@ -221,7 +221,7 @@ public_users.get('/promise/title/:title', function (req, res) {
         });
 });
 
-// Get book by title using async/await with Axios (NEW)
+// Get book by title using async/await with Axios
 public_users.get('/async/title/:title', async function (req, res) {
     const title = req.params.title;
     try {
