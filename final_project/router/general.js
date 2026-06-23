@@ -75,18 +75,7 @@ public_users.get('/isbn/:isbn',function (req, res) {
     }
 });
 
-// Get book details based on ISBN (existing route)
-public_users.get('/isbn/:isbn', function (req, res) {
-    const isbn = req.params.isbn;
-    const book = books[isbn];
-    if (book) {
-        return res.status(200).json(book);
-    } else {
-        return res.status(404).json({ message: "Book not found" });
-    }
-});
-
-// Get book by ISBN using Promise callbacks (NEW)
+// Get book by ISBN using Promise callbacks
 public_users.get('/promise/isbn/:isbn', function (req, res) {
     const isbn = req.params.isbn;
 
@@ -139,6 +128,47 @@ public_users.get('/author/:author',function (req, res) {
     }
 });
 
+// Get book by author using Promise callbacks (NEW)
+public_users.get('/promise/author/:author', function (req, res) {
+    const author = req.params.author;
+
+    const getBook = new Promise((resolve, reject) => {
+        const bookKeys = Object.keys(books);
+        const matchingBooks = [];
+
+        bookKeys.forEach((key) => {
+            if (books[key].author.toLowerCase() === author.toLowerCase()) {
+                matchingBooks.push({ isbn: key, ...books[key] });
+            }
+        });
+
+        if (matchingBooks.length > 0) {
+            resolve(matchingBooks);
+        } else {
+            reject("No books found for this author");
+        }
+    });
+
+    getBook
+        .then((books) => {
+            return res.status(200).json(books);
+        })
+        .catch((err) => {
+            return res.status(404).json({ message: err });
+        });
+});
+
+// Get book by author using async/await with Axios (NEW)
+public_users.get('/async/author/:author', async function (req, res) {
+    const author = req.params.author;
+    try {
+        const response = await axios.get(`http://localhost:5000/author/${author}`);
+        return res.status(200).json(response.data);
+    } catch (err) {
+        return res.status(404).json({ message: "No books found for this author" });
+    }
+});
+
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
     const title = req.params.title;
@@ -157,6 +187,47 @@ public_users.get('/title/:title',function (req, res) {
     if (matchingBooks.length > 0) {
         return res.status(200).json(matchingBooks);
     } else {
+        return res.status(404).json({ message: "No books found for this title" });
+    }
+});
+
+// Get book by title using Promise callbacks (NEW)
+public_users.get('/promise/title/:title', function (req, res) {
+    const title = req.params.title;
+
+    const getBook = new Promise((resolve, reject) => {
+        const bookKeys = Object.keys(books);
+        const matchingBooks = [];
+
+        bookKeys.forEach((key) => {
+            if (books[key].title.toLowerCase() === title.toLowerCase()) {
+                matchingBooks.push({ isbn: key, ...books[key] });
+            }
+        });
+
+        if (matchingBooks.length > 0) {
+            resolve(matchingBooks);
+        } else {
+            reject("No books found for this title");
+        }
+    });
+
+    getBook
+        .then((books) => {
+            return res.status(200).json(books);
+        })
+        .catch((err) => {
+            return res.status(404).json({ message: err });
+        });
+});
+
+// Get book by title using async/await with Axios (NEW)
+public_users.get('/async/title/:title', async function (req, res) {
+    const title = req.params.title;
+    try {
+        const response = await axios.get(`http://localhost:5000/title/${title}`);
+        return res.status(200).json(response.data);
+    } catch (err) {
         return res.status(404).json({ message: "No books found for this title" });
     }
 });
