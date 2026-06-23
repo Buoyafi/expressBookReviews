@@ -3,6 +3,7 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios');
 
 
 // Register a new user
@@ -29,6 +30,35 @@ public_users.get('/',function (req, res) {
     // Send JSON response with formatted friends data
     res.send(JSON.stringify(books,null,4));
 
+});
+
+// Get the book list using Promise callbacks
+public_users.get('/promise/books', function (req, res) {
+    const getBooks = new Promise((resolve, reject) => {
+        if (books) {
+            resolve(books);
+        } else {
+            reject("Unable to retrieve books");
+        }
+    });
+
+    getBooks
+        .then((books) => {
+            return res.status(200).json(books);
+        })
+        .catch((err) => {
+            return res.status(500).json({ message: err });
+        });
+});
+
+// Get the book list using async/await with Axios
+public_users.get('/async/books', async function (req, res) {
+    try {
+        const response = await axios.get('http://localhost:5000/');
+        return res.status(200).json(response.data);
+    } catch (err) {
+        return res.status(500).json({ message: "Unable to retrieve books" });
+    }
 });
 
 // Get book details based on ISBN
